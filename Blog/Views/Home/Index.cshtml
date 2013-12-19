@@ -1,0 +1,31 @@
+﻿@model Blog.Models.PostModel
+
+<h3>Статьи:</h3>
+<ol class="round">
+    @foreach (var post in Model.Posts)
+    {
+        <li class="one">
+            <h5>@post.Title</h5>
+            <i>Написано @post.Created.ToString("dd/MM/yy HH:mm") пользователем @post.Users.Login</i>
+            <br />
+            @post.Text
+            @Html.ActionLink("Читать...", "Post", new { id = post.Id })
+        </li> 
+    }
+</ol>
+
+@if (User.Identity.IsAuthenticated && Model.IsWriter)
+{
+    <br />
+    <hr />
+
+    using (Html.BeginForm("AddPost", "Home"))
+    {
+        @Html.Label("Заголовок")
+        @Html.TextBox("title", string.Empty)
+        @Html.Label("Текст")
+        @Html.TextArea("text", string.Empty)
+        <br />
+        <input type="submit" value="Добавить" />
+    }
+}

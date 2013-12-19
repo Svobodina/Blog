@@ -1,0 +1,47 @@
+﻿@model Blog.Entities.Posts
+
+@{
+    ViewBag.Title = "Статья";
+}
+
+@if (Model != null)
+{
+    <h5>@Model.Title</h5>
+    <i>Написано @Model.Created.ToString("dd/MM/yy HH:mm") пользователем @Model.Users.Login</i>
+    <br />
+    @Model.Text
+
+    <br />
+    <br />
+    <b>Комментарии</b>
+    <br />
+    foreach (var comment in Model.Comments)
+    {
+        <i>Написано @comment.Created.ToString("dd/MM/yy HH:mm") пользователем @comment.Users.Login</i>
+        <br />
+        @comment.Text
+        <br />
+        <br />
+    }
+    
+    <br />
+    if (User.Identity.IsAuthenticated)
+    {
+        using (Html.BeginForm("AddComment", "Home"))
+        {
+            @Html.Hidden("post", Model.Id);
+            @Html.TextArea("text", string.Empty);
+            <br />
+            <input type="submit" value="Добавить" />
+        }
+    }
+}
+else
+{
+    <b>Такой статьи нет!</b>
+}
+
+<br />
+<br />
+
+@Html.ActionLink("Вернуться", "Index", "Home")
